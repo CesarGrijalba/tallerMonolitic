@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: ./apigw
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    depends_on:
+      - authservice
+      - redis
+      - salchipapitas
+      - movies
+
+  authservice:
+    build:
+      context: ./authservice
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+
+  salchipapitas:
+    build:
+      context: ./salchipapitas
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - authservice
+      - redis
+
+  movies:
+    build:
+      context: ./movies
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
